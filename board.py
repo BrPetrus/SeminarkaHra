@@ -1,8 +1,5 @@
+import queue
 import tkinter
-HEIGHT = 400
-WIDTH = 400
-c = tkinter.Canvas(width = WIDTH, height = HEIGHT, bg='white')
-c.pack()
 
 class Board:
     rows = 4
@@ -29,15 +26,57 @@ class Board:
         x, y = 0, 0
         for r in range(len(self.map)):
             for c in range(len(self.map[r])):
-                canvas.create_rectangle(x, y, x+50, y+50, fill=self.colours[self.map[r][c]])
+                canvas.create_rectangle(x, y, x+50, y+50, fill=self.colours[self.map[r][c]], width=0, outline='white')
                 x += 50
             x = 0
             y += 50
 
-class Player:
-    pass
+def drawBorders(board, r, c, canvas):
+    q = queue.Queue()
+    m = [[False, False, False, False], [False, False, False, False], [False, False,False,False], [False,False,False,False]]
+    q.put((r,c))
 
-B = Board()
-B.print()
-B.draw(c)
-c.mainloop()
+    n = 0
+    while not q.empty():
+        cell = q.get()
+        r = cell[0]
+        c = cell[1]
+        colour = board.map[r][c]
+        if m[r][c] == True:
+            continue
+        m[r][c] = True
+        n += 1
+
+        # Check neighbours
+        # Top
+        if r-1 > -1:
+            if board.map[r-1][c] == colour:
+                if m[r-1][c] == False:
+                    q.put((r-1, c))
+            else:
+                canvas.create_line(c*50, r*50, c*50 + 50, r*50, width=2, dash=(4,4))
+
+        # Bottom
+        if r+1 < 4:
+            if board.map[r+1][c] == colour:
+                if m[r+1][c] == False:
+                    q.put((r+1, c))
+            else:
+                canvas.create_line(c*50, r*50 + 50, c*50 + 50, r*50 + 50, width=2, dash=(4,4))
+
+        # Left
+        if c-1 > -1:
+            if board.map[r][c-1] == colour:
+                if m[r][c-1] == False:
+                    q.put((r, c-1))
+            else:
+                canvas.create_line(c*50, r*50, c*50, r*50+50, width=2, dash=(4,4))
+
+        # Right
+        if c+1 < 4:
+            if board.map[r][c+1] == colour:
+                if m[r][c+1] == False:
+                    q.put((r, c+1))
+            else:
+                canvas.create_line(c*50+50, r*50, c*50 + 50, r*50+50, width=2, dash=(4,4))
+    return n
