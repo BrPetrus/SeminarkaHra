@@ -1,5 +1,11 @@
+General:
+  ☐ Somehow highlight current player @high
 
 Map:
   ☐ Random map generation @high  
   ☐ Borders - make it more idiot proof @low
   ✔ Mark borders @done(19-05-11 15:41)
+
+Controls:
+  ☐ Escape bind doesnt work @low
+  ☐ Highlight selected @critical

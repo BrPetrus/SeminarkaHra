@@ -2,12 +2,12 @@ import queue
 import tkinter
 
 class Board:
-    rows = 4
-    col = 4
+    rows = 7
+    col = 8
 
     colours = {
-        -1: 'blue',
-        -2: 'gray',
+        -1: 'gray',
+        -2: 'blue',
         1: 'green',
         0: 'brown'
     }
@@ -17,7 +17,13 @@ class Board:
         self.generateMap()
 
     def generateMap(self):
-        self.map = [[-2, -2, -2, -2],[-2, -2, 0, 0],[-2, 1, 1, -2],[-2, 1, -2, -2]]
+        self.map = [[-2, -2, -2, -2, -2, -2, -2, -2],
+                    [-2, -1, 0, -1, -1, 1, -1, -2],
+                    [-2, -1, -1, -1, -1, -1, -1, -2],
+                    [-2, -1, -1, -1, -1, -1, -1, -2],
+                    [-2, -1, -1, -1, -1, -1, -1, -2],
+                    [-2, -1, -1, -1, -1, -1, -1, -2],
+                    [-2, -2, -2, -2, -2, -2, -2, -2]]
 
     def print(self):
         print(self.map)
@@ -26,14 +32,16 @@ class Board:
         x, y = 0, 0
         for r in range(len(self.map)):
             for c in range(len(self.map[r])):
-                canvas.create_rectangle(x, y, x+50, y+50, fill=self.colours[self.map[r][c]], width=0, outline='white')
+                canvas.create_rectangle(x, y, x+50, y+50, fill=self.colours[self.map[r][c]], width=0, outline='white', tags='board')
                 x += 50
             x = 0
             y += 50
 
 def drawBorders(board, r, c, canvas):
-    q = queue.Queue()
-    m = [[False, False, False, False], [False, False, False, False], [False, False,False,False], [False,False,False,False]]
+    q = queue.Queue(-1)
+    m = list()
+    for i in range(board.rows):
+        m.append([False]*board.col)
     q.put((r,c))
 
     n = 0
@@ -54,15 +62,15 @@ def drawBorders(board, r, c, canvas):
                 if m[r-1][c] == False:
                     q.put((r-1, c))
             else:
-                canvas.create_line(c*50, r*50, c*50 + 50, r*50, width=2, dash=(4,4))
+                canvas.create_line(c*50, r*50, c*50 + 50, r*50, width=2, dash=(4,4), tags='player')
 
         # Bottom
-        if r+1 < 4:
+        if r+1 < board.rows:
             if board.map[r+1][c] == colour:
                 if m[r+1][c] == False:
                     q.put((r+1, c))
             else:
-                canvas.create_line(c*50, r*50 + 50, c*50 + 50, r*50 + 50, width=2, dash=(4,4))
+                canvas.create_line(c*50, r*50 + 50, c*50 + 50, r*50 + 50, width=2, dash=(4,4), tags='player')
 
         # Left
         if c-1 > -1:
@@ -70,13 +78,13 @@ def drawBorders(board, r, c, canvas):
                 if m[r][c-1] == False:
                     q.put((r, c-1))
             else:
-                canvas.create_line(c*50, r*50, c*50, r*50+50, width=2, dash=(4,4))
+                canvas.create_line(c*50, r*50, c*50, r*50+50, width=2, dash=(4,4), tags='player')
 
         # Right
-        if c+1 < 4:
+        if c+1 < board.col:
             if board.map[r][c+1] == colour:
                 if m[r][c+1] == False:
                     q.put((r, c+1))
             else:
-                canvas.create_line(c*50+50, r*50, c*50 + 50, r*50+50, width=2, dash=(4,4))
+                canvas.create_line(c*50+50, r*50, c*50 + 50, r*50+50, width=2, dash=(4,4), tags='player')
     return n
