@@ -1,11 +1,30 @@
 General:
-  ☐ Somehow highlight current player @high
+  ✔ Somehow highlight current player @high @done(19-05-16 18:29)
+  ☐ Don't forget to update enemy income when you take their cells @critical 
 
 Map:
-  ☐ Random map generation @high  
-  ☐ Borders - make it more idiot proof @low
+  ✘ Random map generation @high @cancelled(19-05-16 20:20)
+  ✘ Borders - make it more idiot proof @cancelled(19-05-16 20:20)
   ✔ Mark borders @done(19-05-11 15:41)
+  ☐ Random base locations @low
 
-Controls:
-  ☐ Escape bind doesnt work @low
+Panel & General controls:
+  ✘ Escape bind doesnt work @low @cancelled(19-05-16 20:20)
   ☐ Highlight selected @critical
+  ✔ Last key press @done(19-05-16 19:49)
+
+Units:
+  ✔ Check if cell is free @done(19-05-16 19:35)
+  Check if cell is protected: @critical
+    ☐ Attacking
+    ☐ Moving
+  ✔ Upgrade units @done(19-05-16 19:23)
+  ✔ Expand territory, when unit moves on a cell @done(19-05-16 19:40)
+  ☐ Stepping on eemy castle causes a win @critical
+  ☐ Moving units @critical 
+
+General gameplay:
+  ✔ Make income and coins work @critical @done(19-05-16 20:20)
+
+Misc:
+  ☐ Merge clickonboard and click @improvement
