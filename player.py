@@ -21,6 +21,11 @@ class Player:
             if unit[2] == 2:
                 canvas.create_oval(x+10, y+10, x+40, y+40, fill='gray', tags='player')
 
+    def highlightUnit(self, index, canvas):
+        y, x = self.units[index][0] * 50, self.units[index][1] * 50
+        print(x,y)
+        canvas.create_oval(x+15, y+15, x+25, y+25, fill='yellow', tags='player')
+
     def draw(self, canvas):
         self.drawBase(canvas)
         self.drawUnits(canvas)

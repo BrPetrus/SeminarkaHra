@@ -1,9 +1,9 @@
 General:
-  ✔ Somehow highlight current player @high @done(19-05-16 18:29)
+  ✔ Somehow highlight current player @done(19-05-16 18:29)
   ☐ Don't forget to update enemy income when you take their cells @critical 
 
 Map:
-  ✘ Random map generation @high @cancelled(19-05-16 20:20)
+  ✘ Random map generation @cancelled(19-05-16 20:20)
   ✘ Borders - make it more idiot proof @cancelled(19-05-16 20:20)
   ✔ Mark borders @done(19-05-11 15:41)
   ☐ Random base locations @low
@@ -21,10 +21,12 @@ Units:
   ✔ Upgrade units @done(19-05-16 19:23)
   ✔ Expand territory, when unit moves on a cell @done(19-05-16 19:40)
   ☐ Stepping on eemy castle causes a win @critical
-  ☐ Moving units @critical 
+  Moving units: 
+    ✔ Highlight currently selected unit @done(19-05-18 21:23)
+    ☐ Check for units protecting the cell @critical
 
 General gameplay:
-  ✔ Make income and coins work @critical @done(19-05-16 20:20)
+  ✔ Make income and coins work @done(19-05-16 20:20)
 
 Misc:
   ☐ Merge clickonboard and click @improvement

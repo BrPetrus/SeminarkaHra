@@ -31,9 +31,12 @@ currentPlayer = 0
 lastKey = ''
 
 # Moving
-selectedUnit = 0
+selectedUnit = -1
 
 def clickOnBoard(r, c):
+
+    # tu sa nic nedeje
+
     if B.map[r][c] is players[currentPlayer].colour:
         for p in players:
             if p.base == (r, c):
@@ -57,7 +60,7 @@ def checkCellForBasesAndUnits(row, col):
     return(-1)
 
 def click(coordinates):
-    global lastKey
+    global lastKey, selectedUnit
     if coordinates.y > 300:
         pass
     else:
@@ -76,7 +79,20 @@ def click(coordinates):
         cell = checkCellForBasesAndUnits(row, col)
 
         if lastKey == 'M':
-            pass
+            if selectedUnit == -1: # We have not selected a unit
+                if cell != -1 and cell[0] == currentPlayer: # If we clicked on our unit
+                    selectedUnit = cell[1]  # Select ths unit for furthe movement
+            else:   # We have already selected a unit
+                if cell == -1: # Empty cell
+                    # Move the selected unit
+                    players[currentPlayer].units[selectedUnit][0] = row
+                    players[currentPlayer].units[selectedUnit][1] = col
+                    # Update map colours
+                    B.map[row][col] = players[currentPlayer].colour
+                    # Reset
+                    selectedUnit = -1
+
+
         elif lastKey == 'A':
             if cell == -1:  # Empty cell
                 B.map[row][col] = players[currentPlayer].colour
@@ -100,11 +116,13 @@ c.bind('<Button-1>', click)
 c.bind_all('<Key>', key)
 
 def nextTurn():
-    global currentPlayer
+    global currentPlayer, selectedUnit
     if currentPlayer == 0:
         currentPlayer = 1
     else:
         currentPlayer = 0
+
+    selectedUnit = -1
 
     # Income
     players[currentPlayer].coins += players[currentPlayer].income 
@@ -131,6 +149,8 @@ def draw():
     
     for p in players:
         p.draw(c)
+    if selectedUnit != -1:
+        players[currentPlayer].highlightUnit(selectedUnit, c)
     tmp = players[currentPlayer].base
     income = drawBorders(B, tmp[0], tmp[1], c)
     players[currentPlayer].income = income
