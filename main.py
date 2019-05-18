@@ -78,19 +78,28 @@ def click(coordinates):
 
         cell = checkCellForBasesAndUnits(row, col)
 
+        def moveUnit():
+            global selectedUnit
+            # Move the selected unit
+            players[currentPlayer].units[selectedUnit][0] = row
+            players[currentPlayer].units[selectedUnit][1] = col
+            # Update map colours
+            B.map[row][col] = players[currentPlayer].colour
+            # Reset
+            selectedUnit = -1
         if lastKey == 'M':
             if selectedUnit == -1: # We have not selected a unit
                 if cell != -1 and cell[0] == currentPlayer: # If we clicked on our unit
                     selectedUnit = cell[1]  # Select ths unit for furthe movement
             else:   # We have already selected a unit
                 if cell == -1: # Empty cell
-                    # Move the selected unit
-                    players[currentPlayer].units[selectedUnit][0] = row
-                    players[currentPlayer].units[selectedUnit][1] = col
-                    # Update map colours
-                    B.map[row][col] = players[currentPlayer].colour
-                    # Reset
-                    selectedUnit = -1
+                    moveUnit()
+                elif len(cell) == 2 and cell[0] != currentPlayer: # Enemy unit
+                    if players[currentPlayer].units[selectedUnit][2] > players[cell[0]].units[cell[1]][2]: # if he is stronger
+                        # Destroy enemy
+                        players[cell[0]].units = players[cell[0]].units[:cell[1]] + players[cell[0]].units[cell[1]+1:]
+                        moveUnit()
+
 
 
         elif lastKey == 'A':
