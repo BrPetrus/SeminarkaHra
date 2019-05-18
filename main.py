@@ -80,7 +80,7 @@ def click(coordinates):
         elif lastKey == 'A':
             if cell == -1:  # Empty cell
                 B.map[row][col] = players[currentPlayer].colour
-                players[currentPlayer].addUnit(row, col, 1, c)
+                players[currentPlayer].addUnit(row, col, 1)
                 lastKey = ''
             elif len(cell) == 1:    # Base
                 pass
