@@ -24,7 +24,7 @@ class Player:
     def highlightUnit(self, index, canvas):
         y, x = self.units[index][0] * 50, self.units[index][1] * 50
         print(x,y)
-        canvas.create_oval(x+15, y+15, x+25, y+25, fill='yellow', tags='player')
+        canvas.create_oval(x+20, y+20, x+30, y+30, fill='yellow', tags='player')
 
     def draw(self, canvas):
         self.drawBase(canvas)
