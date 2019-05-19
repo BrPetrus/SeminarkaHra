@@ -1,5 +1,5 @@
 import tkinter, queue
-from board import Board, drawBorders
+from board import Board, drawBorders, getIncome
 from player import Player
 from panel import Panel
 
@@ -125,7 +125,7 @@ c.bind('<Button-1>', click)
 c.bind_all('<Key>', key)
 
 def nextTurn():
-    global currentPlayer, selectedUnit
+    global currentPlayer, selectedUnit, players
     if currentPlayer == 0:
         currentPlayer = 1
     else:
@@ -134,6 +134,8 @@ def nextTurn():
     selectedUnit = -1
 
     # Income
+    players[currentPlayer].income = getIncome(B, players[currentPlayer].base[0], players[currentPlayer].base[1])
+    print(players[currentPlayer].income)
     players[currentPlayer].coins += players[currentPlayer].income 
     draw()
 

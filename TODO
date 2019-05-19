@@ -1,3 +1,11 @@
+What to do:
+  ☐ Protecting slots
+  ☐ Stepping on enemy castles
+  ☐ Better highlighting
+
+Crucial bugs:
+  ✔ Income does not work @done(19-05-19 12:34)
+
 General:
   ✔ Somehow highlight current player @done(19-05-16 18:29)
   ☐ Don't forget to update enemy income when you take their cells @critical 
@@ -9,8 +17,8 @@ Map:
   ☐ Random base locations @low
 
 Panel & General controls:
-  ✘ Escape bind doesnt work @low @cancelled(19-05-16 20:20)
-  ☐ Highlight selected @critical
+  ✘ Escape bind doesnt work @cancelled(19-05-16 20:20)
+  ✔ Highlight selected @done(19-05-19 12:35)
   ✔ Last key press @done(19-05-16 19:49)
 
 Units:
@@ -24,9 +32,12 @@ Units:
   Moving units: 
     ✔ Highlight currently selected unit @done(19-05-18 21:23)
     ☐ Check for units protecting the cell @critical
+    ☐ Only allow certain distance
+    ☐ Steps on enemy castle -> win
 
 General gameplay:
   ✔ Make income and coins work @done(19-05-16 20:20)
 
 Misc:
   ☐ Merge clickonboard and click @improvement
+  ☐ Find closest own cell @critical

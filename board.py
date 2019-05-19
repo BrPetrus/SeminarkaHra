@@ -37,6 +37,51 @@ class Board:
             x = 0
             y += 50
 
+def getIncome(board, r, c):
+    q = queue.Queue(-1)
+    m = list()
+    for i in range(board.rows):
+        m.append([False]*board.col)
+    q.put((r,c))
+
+    n = 0
+    while not q.empty():
+        cell = q.get()
+        r = cell[0]
+        c = cell[1]
+        colour = board.map[r][c]
+        if m[r][c] == True:
+            continue
+        m[r][c] = True
+        n += 1
+
+        # Check neighbours
+        # Top
+        if r-1 > -1:
+            if board.map[r-1][c] == colour:
+                if m[r-1][c] == False:
+                    q.put((r-1, c))
+
+        # Bottom
+        if r+1 < board.rows:
+            if board.map[r+1][c] == colour:
+                if m[r+1][c] == False:
+                    q.put((r+1, c))
+        
+        # Left
+        if c-1 > -1:
+            if board.map[r][c-1] == colour:
+                if m[r][c-1] == False:
+                    q.put((r, c-1))
+            
+        # Right
+        if c+1 < board.col:
+            if board.map[r][c+1] == colour:
+                if m[r][c+1] == False:
+                    q.put((r, c+1))
+
+    return n
+
 def drawBorders(board, r, c, canvas):
     q = queue.Queue(-1)
     m = list()
