@@ -8,46 +8,37 @@ WIDTH = 400
 c = tkinter.Canvas(width = WIDTH, height = HEIGHT)
 c.pack()
 
-run = True 
-def exit():
-    global run
-    run = False
-c.bind('<Escape>', func=exit)
 
-# Create board
-B = Board()
+B = Board() # Create board
+P = Panel(0, 350, 50)   # Panel
 
-P = Panel(0, 350, 50)
-
-# Iniialise players
+# Initialise players
 players = []
 players.append(Player(1, 2, 0, 5, c))
 players.append(Player(1, 5, 1, 0, c))
 
 currentPlayer = 0
-
-# Key queue
-#keys = queue.Queue(maxsize=1)
 lastKey = ''
-
-# Moving
 selectedUnit = -1
+isRunning = True
+winningPlayer = -1
 
 def clickOnBoard(r, c):
+    pass
 
-    # tu sa nic nedeje
+    # # tu sa nic nedeje
 
-    if B.map[r][c] is players[currentPlayer].colour:
-        for p in players:
-            if p.base == (r, c):
-                #print(True)
-                pass
-            else:
-                pass
-                #print(False)
+    # if B.map[r][c] is players[currentPlayer].colour:
+    #     for p in players:
+    #         if p.base == (r, c):
+    #             #print(True)
+    #             pass
+    #         else:
+    #             pass
+    #             #print(False)
 
-def clickOnPanel(coordinates):
-    drawCoins()
+# def clickOnPanel(coordinates):
+#     drawCoins()
 
 def checkCellForBasesAndUnits(row, col):
     for iPlayer in range(len(players)):
@@ -60,7 +51,10 @@ def checkCellForBasesAndUnits(row, col):
     return(-1)
 
 def click(coordinates):
-    global lastKey, selectedUnit
+    global lastKey, selectedUnit, isRunning, winningPlayer
+    if isRunning == False:
+        return 0
+
     if coordinates.y > 300:
         pass
     else:
@@ -70,8 +64,6 @@ def click(coordinates):
         if row == 0 or row == 6 or col == 0 or col == 7:
             # We clicked outside
             return 0
-
-        clickOnBoard(row, col)
 
         if lastKey == '':
             return 0
@@ -99,8 +91,12 @@ def click(coordinates):
                         # Destroy enemy
                         players[cell[0]].units = players[cell[0]].units[:cell[1]] + players[cell[0]].units[cell[1]+1:]
                         moveUnit()
-
-
+                elif len(cell) == 1 and cell[0] != currentPlayer:    # Enemy castle
+                    moveUnit()
+                    isRunning = False
+                    winningPlayer = currentPlayer
+                    c.create_text(HEIGHT/2, WIDTH/2, text="Vyhral hrac #{:}".format(currentPlayer+1), font='Arial 30 bold')
+                    
 
         elif lastKey == 'A':
             if cell == -1:  # Empty cell
@@ -113,8 +109,9 @@ def click(coordinates):
                 # Upgrade unit
                 players[currentPlayer].units[cell[1]][2] += 1
                 lastKey = ''
-        
-    draw()
+
+    if isRunning == True:    
+        draw()
     
 def key(event):
     global lastKey
@@ -126,6 +123,8 @@ c.bind_all('<Key>', key)
 
 def nextTurn():
     global currentPlayer, selectedUnit, players
+    if isRunning == False:
+        return 0
     if currentPlayer == 0:
         currentPlayer = 1
     else:
