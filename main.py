@@ -40,15 +40,26 @@ def clickOnBoard(r, c):
 # def clickOnPanel(coordinates):
 #     drawCoins()
 
-def checkCellForBasesAndUnits(row, col):
+def checkCell(row, col):
     for iPlayer in range(len(players)):
         p = players[iPlayer]
         if (row, col) == p.base:
-            return(iPlayer, )
+            return(1, iPlayer)  # Base
         for iUnit in range(len(p.units)):
             if p.units[iUnit][0:2] == [row, col]:
-                return(iPlayer, iUnit)
-    return(-1)
+                return(2, iPlayer, iUnit)   # Unit
+    if B.map[row][col] != -1:
+        return(0, B.map[row][col])  # Cell
+    return None # Empty cell
+
+def isCellProtectedByEnemy(row, col):
+    iEnemy = 1 if currentPlayer == 0 else 0
+    enemy = players[iEnemy]
+    for iUnit in range(len(enemy.units)):
+        if enemy.doesUnitProtectCell(iUnit, row, col) == True:
+            return True
+    return False
+    
 
 def click(coordinates):
     global lastKey, selectedUnit, isRunning, winningPlayer
@@ -68,7 +79,7 @@ def click(coordinates):
         if lastKey == '':
             return 0
 
-        cell = checkCellForBasesAndUnits(row, col)
+        cell = checkCell(row, col)
 
         def moveUnit():
             global selectedUnit
@@ -79,36 +90,47 @@ def click(coordinates):
             B.map[row][col] = players[currentPlayer].colour
             # Reset
             selectedUnit = -1
+
+        def createUnit():
+            B.map[row][col] = players[currentPlayer].colour
+            players[currentPlayer].addUnit(row, col)
+
+        print(cell)
+
         if lastKey == 'M':
             if selectedUnit == -1: # We have not selected a unit
-                if cell != -1 and cell[0] == currentPlayer: # If we clicked on our unit
-                    selectedUnit = cell[1]  # Select ths unit for furthe movement
-            else:   # We have already selected a unit
-                if cell == -1: # Empty cell
+                if cell != None and cell[0] == 2 and cell[1] == currentPlayer: # If we clicked on our unit
+                    selectedUnit = cell[2]  # Select ths unit for further movement
+            elif selectedUnit != -1 and B.isCellAdjacent(row, col, players[currentPlayer].colour): # If we selected a unit and is adjacent to already owned cell
+                if cell == None: # Empty cell
                     moveUnit()
-                elif len(cell) == 2 and cell[0] != currentPlayer: # Enemy unit
-                    if players[currentPlayer].units[selectedUnit][2] > players[cell[0]].units[cell[1]][2]: # if he is stronger
+                elif cell[0] == 0 and cell[1] == currentPlayer: # Our own empty cell
+                    moveUnit()
+                elif cell[0] == 0 and cell[1] != currentPlayer and not isCellProtectedByEnemy(row, col): # Enemy cell
+                    moveUnit()
+                elif cell[0] == 2 and cell[1] != currentPlayer: # Enemy unit
+                    if players[currentPlayer].units[selectedUnit][2] > players[cell[1]].units[cell[2]][2]: # if he is stronger
                         # Destroy enemy
-                        players[cell[0]].units = players[cell[0]].units[:cell[1]] + players[cell[0]].units[cell[1]+1:]
+                        players[cell[1]].units = players[cell[1]].units[:cell[2]] + players[cell[1]].units[cell[2]+1:]
                         moveUnit()
-                elif len(cell) == 1 and cell[0] != currentPlayer:    # Enemy castle
+                elif cell[0] == 1 and cell[1] != currentPlayer and not isCellProtectedByEnemy(row, col): # Enemy castle
                     moveUnit()
                     isRunning = False
                     winningPlayer = currentPlayer
-                    c.create_text(HEIGHT/2, WIDTH/2, text="Vyhral hrac #{:}".format(currentPlayer+1), font='Arial 30 bold')
-                    
+                    c.create_text(HEIGHT/2, WIDTH/2, text="Vyhral hrac #{:}".format(currentPlayer+1), font='Arial 30 bold')  
+        
 
         elif lastKey == 'A':
-            if cell == -1:  # Empty cell
-                B.map[row][col] = players[currentPlayer].colour
-                players[currentPlayer].addUnit(row, col, 1)
-                lastKey = ''
-            elif len(cell) == 1:    # Base
+            if cell == None and B.isCellAdjacent(row, col, players[currentPlayer].colour): # If its an empty cell and adjacent to us
+                createUnit()
+            elif cell == None:
                 pass
-            elif cell[0] == currentPlayer:   # Does it belong to the same player
-                # Upgrade unit
-                players[currentPlayer].units[cell[1]][2] += 1
-                lastKey = ''
+            elif cell[0] == 0 and cell[1] == currentPlayer: # Empty but our cell
+                createUnit()
+            elif cell[0] == 0 and cell[1] != currentPlayer and not isCellProtectedByEnemy(row, col): # Empty enemy cell
+                createUnit()
+            elif cell[0] == 2 and cell[1] == currentPlayer: # Upgrade unit
+                players[currentPlayer].upgradeUnit(cell[2])
 
     if isRunning == True:    
         draw()
@@ -134,7 +156,6 @@ def nextTurn():
 
     # Income
     players[currentPlayer].income = getIncome(B, players[currentPlayer].base[0], players[currentPlayer].base[1])
-    print(players[currentPlayer].income)
     players[currentPlayer].coins += players[currentPlayer].income 
     draw()
 

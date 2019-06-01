@@ -1,7 +1,7 @@
 What to do:
-  ☐ Protecting slots
-  ✔ Stepping on enemy castles @done(19-05-19 12:54)
-  ☐ Better highlighting
+  ☐ Upgrade units by stacking them on each other
+  ✘ Reset last character used @cancelled(19-06-01 12:38)
+  ☐ Moving to my cell with unit present, should upgrade it @critical 
 
 Crucial bugs:
   ✔ Income does not work @done(19-05-19 12:34)
@@ -22,22 +22,26 @@ Panel & General controls:
   ✔ Last key press @done(19-05-16 19:49)
 
 Units:
+  ☐ Each unit can do only 1 move per turn
+  ☐ Highlight which units can move
   ✔ Check if cell is free @done(19-05-16 19:35)
+  ✔ Protecting slots @done(19-06-01 12:39)
+  ✔ Limit level @done(19-06-01 12:39)
   Check if cell is protected: @critical
     ☐ Attacking
     ☐ Moving
   ✔ Upgrade units @done(19-05-16 19:23)
   ✔ Expand territory, when unit moves on a cell @done(19-05-16 19:40)
-  ☐ Stepping on eemy castle causes a win @critical
+  ✔ Stepping on eemy castle causes a win @done(19-05-19 13:05)
   Moving units: 
     ✔ Highlight currently selected unit @done(19-05-18 21:23)
     ☐ Check for units protecting the cell @critical
-    ☐ Only allow certain distance
-    ✔ Steps on enemy castle -> win @done(19-05-19 12:54)
+    ✔ Only allow certain distance @done(19-05-28 09:39)
+    ✔ Stepping on enemy castles @done(19-05-19 12:54)
 
 General gameplay:
   ✔ Make income and coins work @done(19-05-16 20:20)
 
 Misc:
   ✘ Merge clickonboard and click @improvement @cancelled(19-05-19 12:55)
-  ☐ Find closest own cell @critical
+  ✔ Find closest own cell @critical @done(19-06-01 12:40)

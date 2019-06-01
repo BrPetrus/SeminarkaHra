@@ -37,6 +37,23 @@ class Board:
             x = 0
             y += 50
 
+    def isCellAdjacent(self, row, col, colour):
+        """
+        Check if there is a neighbourng cell of your own colour.
+        """
+        # Top
+        if self.map[row-1][col] == colour:
+            pass
+        elif self.map[row+1][col] == colour: # Bottom
+            pass
+        elif self.map[row][col-1] == colour: # Left
+            pass
+        elif self.map[row][col+1] == colour: # Right
+            pass
+        else:
+            return False
+        return True
+
 def getIncome(board, r, c):
     q = queue.Queue(-1)
     m = list()
