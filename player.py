@@ -1,10 +1,10 @@
 class Player:
-    def __init__(self, r, c, colour, income, canvas):
+    def __init__(self, r, c, colour, coins, canvas):
         self.base = (r, c)
         self.colour = colour
-        self.income = income
+        self.income = 0 # its calculated later
         self.units = []
-        self.coins = 0
+        self.coins = coins
         self.ableToMove = []
 
     def drawBase(self, canvas):
@@ -37,14 +37,15 @@ class Player:
         self.drawBase(canvas)
         self.drawUnits(canvas)
 
-    def addUnit(self, r, c):
+    def addUnit(self, r, c, t):
         self.units.append([r,c,1])
-        self.ableToMove.append(True)
+        self.ableToMove.append(t)
 
     def upgradeUnit(self, iUnit):
         lvl = self.units[iUnit][2]
-        if lvl <= 2:
+        if lvl <= 2 and self.coins >= 5:
             self.units[iUnit][2] += 1
+            self.coins -= 5
 
     def doesUnitProtectCell(self, iUnit, r, c):
         """

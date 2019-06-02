@@ -15,7 +15,7 @@ P = Panel(0, 350, 50)   # Panel
 # Initialise players
 players = []
 players.append(Player(1, 2, 0, 5, c))
-players.append(Player(1, 5, 1, 0, c))
+players.append(Player(1, 5, 1, 5, c))
 
 currentPlayer = 0
 lastKey = ''
@@ -55,8 +55,20 @@ def checkCell(row, col):
 def isCellProtectedByEnemy(row, col):
     iEnemy = 1 if currentPlayer == 0 else 0
     enemy = players[iEnemy]
+    maxLevel = 0
     for iUnit in range(len(enemy.units)):
-        if enemy.doesUnitProtectCell(iUnit, row, col) == True:
+        if enemy.doesUnitProtectCell(iUnit, row, col): # If it does protect
+            maxLevel = max(maxLevel, enemy.units[iUnit][2])
+    return maxLevel
+
+def canPlayerTakeCell(row, cell, iUnit):
+    unit = players[currentPlayer].units[iUnit]
+    if unit[2] == 3: # if lvl 3, then takes anything
+        return True
+    else:
+        lvl = isCellProtectedByEnemy(row, cell)
+        print(lvl)
+        if lvl < unit[2]:
             return True
     return False
     
@@ -93,11 +105,11 @@ def click(coordinates):
             players[currentPlayer].ableToMove[selectedUnit] = False
             selectedUnit = -1
 
-        def createUnit():
-            B.map[row][col] = players[currentPlayer].colour
-            players[currentPlayer].addUnit(row, col)
-
-        print(cell)
+        def createUnit(t):
+            if players[currentPlayer].coins >= 5:
+                B.map[row][col] = players[currentPlayer].colour
+                players[currentPlayer].addUnit(row, col, t)
+                players[currentPlayer].coins -= 5
 
         if lastKey == 'M':
             if selectedUnit == -1: # We have not selected a unit
@@ -108,14 +120,16 @@ def click(coordinates):
                     moveUnit()
                 elif cell[0] == 0 and cell[1] == currentPlayer: # Our own empty cell
                     moveUnit()
-                elif cell[0] == 0 and cell[1] != currentPlayer and not isCellProtectedByEnemy(row, col): # Enemy cell
+                elif cell[0] == 2 and cell[1] == currentPlayer: # We clicked on our own unit
+                    selectedUnit = cell[2]
+                elif cell[0] == 0 and cell[1] != currentPlayer and canPlayerTakeCell(row, col, selectedUnit): # Enemy cell
                     moveUnit()
                 elif cell[0] == 2 and cell[1] != currentPlayer: # Enemy unit
                     if players[currentPlayer].units[selectedUnit][2] > players[cell[1]].units[cell[2]][2]: # if he is stronger
                         # Destroy enemy
                         players[cell[1]].units = players[cell[1]].units[:cell[2]] + players[cell[1]].units[cell[2]+1:]
                         moveUnit()
-                elif cell[0] == 1 and cell[1] != currentPlayer and not isCellProtectedByEnemy(row, col): # Enemy castle
+                elif cell[0] == 1 and cell[1] != currentPlayer and canPlayerTakeCell(row, col, selectedUnit) : # Enemy castle
                     moveUnit()
                     isRunning = False
                     winningPlayer = currentPlayer
@@ -125,13 +139,13 @@ def click(coordinates):
 
         elif lastKey == 'A':
             if cell == None and B.isCellAdjacent(row, col, players[currentPlayer].colour): # If its an empty cell and adjacent to us
-                createUnit()
+                createUnit(False)
             elif cell == None:
                 pass
             elif cell[0] == 0 and cell[1] == currentPlayer: # Empty but our cell
-                createUnit()
-            elif cell[0] == 0 and cell[1] != currentPlayer and not isCellProtectedByEnemy(row, col): # Empty enemy cell
-                createUnit()
+                createUnit(True)
+            elif cell[0] == 0 and cell[1] != currentPlayer and canPlayerTakeCell(row, col, selectedUnit): # Empty enemy cell
+                createUnit(False)
             elif cell[0] == 2 and cell[1] == currentPlayer: # Upgrade unit
                 players[currentPlayer].upgradeUnit(cell[2])
 
@@ -139,8 +153,10 @@ def click(coordinates):
         draw()
     
 def key(event):
-    global lastKey
+    global lastKey, selectedUnit
     lastKey = event.char.upper()
+    if lastKey == 'A':
+        selectedUnit = -1
     draw()
 
 c.bind('<Button-1>', click)
