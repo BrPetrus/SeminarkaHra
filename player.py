@@ -5,6 +5,7 @@ class Player:
         self.income = income
         self.units = []
         self.coins = 0
+        self.ableToMove = []
 
     def drawBase(self, canvas):
         x, y = 5, 5
@@ -15,6 +16,7 @@ class Player:
     
     def drawUnits(self, canvas):
         x, y = 0 , 0
+        i = 0
         for unit in self.units:
             x, y = unit[1]*50, unit[0]*50
             canvas.create_oval(x+5, y+5, x+45, y+45, fill='black', tags='player')
@@ -22,6 +24,10 @@ class Player:
                 canvas.create_oval(x+10, y+10, x+40, y+40, fill='gray', tags='player')
             if unit[2] == 3:
                 canvas.create_oval(x+15, y+15, x+35, y+35, fill='aqua', tags='player')
+            if self.ableToMove[i] == True:
+                canvas.create_line(x, y+40, x+50, y+40, fill='yellow', tags='player')
+
+            i += 1
 
     def highlightUnit(self, index, canvas):
         y, x = self.units[index][0] * 50, self.units[index][1] * 50
@@ -33,6 +39,7 @@ class Player:
 
     def addUnit(self, r, c):
         self.units.append([r,c,1])
+        self.ableToMove.append(True)
 
     def upgradeUnit(self, iUnit):
         lvl = self.units[iUnit][2]
@@ -57,3 +64,8 @@ class Player:
         else:
             return False
         return True
+
+    def resetMoves(self):
+        for i in range(len(self.ableToMove)):
+            self.ableToMove[i] = True
+

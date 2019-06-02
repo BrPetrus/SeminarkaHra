@@ -88,7 +88,9 @@ def click(coordinates):
             players[currentPlayer].units[selectedUnit][1] = col
             # Update map colours
             B.map[row][col] = players[currentPlayer].colour
-            # Reset
+            
+            # Reset action points
+            players[currentPlayer].ableToMove[selectedUnit] = False
             selectedUnit = -1
 
         def createUnit():
@@ -101,7 +103,7 @@ def click(coordinates):
             if selectedUnit == -1: # We have not selected a unit
                 if cell != None and cell[0] == 2 and cell[1] == currentPlayer: # If we clicked on our unit
                     selectedUnit = cell[2]  # Select ths unit for further movement
-            elif selectedUnit != -1 and B.isCellAdjacent(row, col, players[currentPlayer].colour): # If we selected a unit and is adjacent to already owned cell
+            elif selectedUnit != -1 and players[currentPlayer].ableToMove[selectedUnit] and B.isCellAdjacent(row, col, players[currentPlayer].colour): # If we selected a unit and is adjacent to already owned cell
                 if cell == None: # Empty cell
                     moveUnit()
                 elif cell[0] == 0 and cell[1] == currentPlayer: # Our own empty cell
@@ -118,7 +120,8 @@ def click(coordinates):
                     isRunning = False
                     winningPlayer = currentPlayer
                     c.create_text(HEIGHT/2, WIDTH/2, text="Vyhral hrac #{:}".format(currentPlayer+1), font='Arial 30 bold')  
-        
+            else:
+                selectedUnit = -1
 
         elif lastKey == 'A':
             if cell == None and B.isCellAdjacent(row, col, players[currentPlayer].colour): # If its an empty cell and adjacent to us
@@ -152,11 +155,12 @@ def nextTurn():
     else:
         currentPlayer = 0
 
+    players[currentPlayer].resetMoves()
     selectedUnit = -1
 
     # Income
     players[currentPlayer].income = getIncome(B, players[currentPlayer].base[0], players[currentPlayer].base[1])
-    players[currentPlayer].coins += players[currentPlayer].income 
+    players[currentPlayer].coins += players[currentPlayer].income
     draw()
 
 bTurn = tkinter.Button(text='Next Turn', command = nextTurn)
