@@ -5,7 +5,11 @@ from panel import Panel
 
 HEIGHT = 400
 WIDTH = 400
-c = tkinter.Canvas(width = WIDTH, height = HEIGHT)
+
+master = tkinter.Tk()
+master.title('Hra')
+
+c = tkinter.Canvas(master, width = WIDTH, height = HEIGHT)
 c.pack()
 
 
@@ -15,30 +19,13 @@ P = Panel(0, 350, 50)   # Panel
 # Initialise players
 players = []
 players.append(Player(1, 2, 0, 5, c))
-players.append(Player(1, 5, 1, 5, c))
+players.append(Player(5, 5, 1, 5, c))
 
 currentPlayer = 0
 lastKey = ''
 selectedUnit = -1
 isRunning = True
 winningPlayer = -1
-
-def clickOnBoard(r, c):
-    pass
-
-    # # tu sa nic nedeje
-
-    # if B.map[r][c] is players[currentPlayer].colour:
-    #     for p in players:
-    #         if p.base == (r, c):
-    #             #print(True)
-    #             pass
-    #         else:
-    #             pass
-    #             #print(False)
-
-# def clickOnPanel(coordinates):
-#     drawCoins()
 
 def checkCell(row, col):
     for iPlayer in range(len(players)):
@@ -166,12 +153,13 @@ def nextTurn():
     global currentPlayer, selectedUnit, players
     if isRunning == False:
         return 0
+    players[currentPlayer].resetMoves(False)
     if currentPlayer == 0:
         currentPlayer = 1
     else:
         currentPlayer = 0
 
-    players[currentPlayer].resetMoves()
+    players[currentPlayer].resetMoves(True)
     selectedUnit = -1
 
     # Income
@@ -183,8 +171,8 @@ bTurn = tkinter.Button(text='Next Turn', command = nextTurn)
 bTurn.place(x=200, y=350)
 
 def drawCoins():
-    c.create_text(200, 390, text="Coins: {:}".format(players[currentPlayer].coins), tags='money')
-    c.create_text(300, 390, text="Income: {:}".format(players[currentPlayer].income), tags='money')
+    c.create_text(200, 390, text="Coins: {:}".format(players[currentPlayer].coins), font='Arial 12', tags='money')
+    c.create_text(300, 390, text="Income: {:}".format(players[currentPlayer].income), font='Arial 12', tags='money')
 
 def draw():
     c.delete('money')
@@ -196,6 +184,8 @@ def draw():
     select = -1
     if lastKey == 'A':
         select = 0
+    elif lastKey == 'M':
+        select = 1
     P.draw(0,0,select,c)
     
     for p in players:

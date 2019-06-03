@@ -66,7 +66,7 @@ class Player:
             return False
         return True
 
-    def resetMoves(self):
+    def resetMoves(self, value):
         for i in range(len(self.ableToMove)):
-            self.ableToMove[i] = True
+            self.ableToMove[i] = value
 
